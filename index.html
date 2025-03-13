@@ -15,7 +15,9 @@
   </head>
   <body>
     <header>
-      <nav class="w-11/12 mx-auto flex justify-between border-b-2 py-3">
+      <nav
+        class="w-11/12 mx-auto flex justify-between items-center border-b-2 border-[#17171720] py-5"
+      >
         <div class="logo">
           <img class="w-[120px]" src="assets/Logo.png" alt="" />
         </div>
@@ -23,9 +25,22 @@
           <button class="btn">Sort by view</button>
         </div>
         <div class="blogs">
-          <button class="btn">Blog</button>
+          <button class="btn bg-red-600 text-white">Blog</button>
         </div>
       </nav>
     </header>
+
+    <!-- samll category buttons -->
+    <nav id="category-container" class="flex py-4 justify-center gap-5">
+      <div>
+        <button class="btn btn-sm bg-red-600 text-white">All</button>
+      </div>
+      <!-- <button class="btn btn-sm">Music</button>
+      <button class="btn btn-sm">Comedy</button>
+      <button class="btn btn-sm">Drawing</button> -->
+    </nav>
+
+    <!-- script file link up -->
+    <script src="script/index.js"></script>
   </body>
 </html>
