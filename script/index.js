@@ -22,7 +22,11 @@ const loadCategoryVideos = (id) => {
 
   fetch(url)
     .then((res) => res.json())
-    .then((data) => displayVideos(data.category));
+    .then((data) => {
+      const clickedButton = document.getElementById(`btn-${id}`);
+      clickedButton.classList.add("active");
+      displayVideos(data.category);
+    });
 };
 
 function displayCategories(categories) {
@@ -37,7 +41,7 @@ function displayCategories(categories) {
     // 3. create Element.
     const categoryDiv = document.createElement("div");
     categoryDiv.innerHTML = `
-  <button onClick="loadCategoryVideos(${cate.category_id})" class="btn btn-sm hover:bg-red-600 hover:text-white">${cate.category}</button>
+  <button id="btn-${cate.category_id}" onClick="loadCategoryVideos(${cate.category_id})" class="btn btn-sm hover:bg-red-600 hover:text-white">${cate.category}</button>
   `;
     // 4. Append the Element.
     categoryContainer.append(categoryDiv);
@@ -74,6 +78,20 @@ const displayVideos = (videos) => {
   //   category er video asar por jate,age load howa video gula gayeb hoye jay , de jonno. amra emty string kore dibo.
   videoContainer.innerHTML = "";
   //   instead of for of loop we will use forEach function since it is an array of object.
+
+  if (videos.length == 0) {
+    videoContainer.innerHTML = `
+          <div
+        class="py-28 col-span-full flex flex-col justify-center items-center"
+      >
+        <img src="assets/Icon.png" alt="" />
+        <h2 class="text-2xl font-bold">
+          Oops!! Sorry, There is no content here
+        </h2>
+      </div>
+    `;
+    return;
+  }
 
   videos.forEach((video) => {
     // console.log(video);

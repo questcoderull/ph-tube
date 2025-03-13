@@ -11,6 +11,13 @@
       type="text/css"
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+      .active {
+        background-color: #ff1f3d;
+        color: white;
+      }
+    </style>
     <title>Ph tube</title>
   </head>
   <body>
@@ -33,9 +40,7 @@
     <!-- samll category buttons -->
     <nav id="category-container" class="flex py-4 justify-center gap-5">
       <div>
-        <button onclick="loadVideo()" class="btn btn-sm bg-red-600 text-white">
-          All
-        </button>
+        <button onclick="loadVideo()" class="btn btn-sm">All</button>
       </div>
       <!-- <button class="btn btn-sm">Music</button>
       <button class="btn btn-sm">Comedy</button>
@@ -79,6 +84,15 @@
           </div>
         </div>
       </div> -->
+
+      <div
+        class="py-28 col-span-full flex flex-col justify-center items-center"
+      >
+        <img src="assets/Icon.png" alt="" />
+        <h2 class="text-2xl font-bold">
+          Oops!! Sorry, There is no content here
+        </h2>
+      </div>
     </section>
     <!-- script file link up -->
     <script src="script/index.js"></script>
