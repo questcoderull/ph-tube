@@ -1,5 +1,22 @@
 console.log("index is connected");
 
+const showLoader = () => {
+  document.getElementById("loader").classList.remove("hidden");
+  document.getElementById("video-contaier").classList.add("hidden");
+};
+const hideLoader = () => {
+  document.getElementById("loader").classList.add("hidden");
+  document.getElementById("video-contaier").classList.remove("hidden");
+};
+
+function removeActiveClass() {
+  const activeButtons = document.getElementsByClassName("active");
+
+  for (let btn of activeButtons) {
+    btn.classList.remove("active");
+  }
+}
+
 function loadCategory() {
   //   first kaj, datake fetch kora.
   fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
@@ -9,26 +26,72 @@ function loadCategory() {
     .then((data) => displayCategories(data.categories));
 }
 
-function loadVideo() {
-  fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
+function loadVideo(searchtext = "") {
+  showLoader();
+
+  fetch(
+    `https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchtext}`
+  )
     .then((response) => response.json())
-    .then((data) => displayVideos(data.videos));
+    .then((data) => {
+      removeActiveClass();
+      document.getElementById("btn-all").classList.add("active");
+      displayVideos(data.videos);
+    });
 }
 
 // category er upor bitti kore button er action newa.
 const loadCategoryVideos = (id) => {
+  showLoader();
   const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`;
   //   console.log(url);
 
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
+      removeActiveClass();
+      // now active class on any btn now.
+
       const clickedButton = document.getElementById(`btn-${id}`);
       clickedButton.classList.add("active");
       displayVideos(data.category);
     });
 };
 
+const loadVideoDetails = (videoId) => {
+  console.log(videoId);
+
+  // fetch korbo.
+  const url = `https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`;
+
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => displayVideoDetails(data.video));
+};
+// video details gulu ke amra display video detail e pataiya ditechi.
+
+const displayVideoDetails = (video) => {
+  console.log(video);
+  document.getElementById("video_details").showModal();
+
+  const detailsContainer = document.getElementById("details_container");
+
+  detailsContainer.innerHTML = `
+
+  <div class="card bg-base-100 image-full shadow-sm">
+  <figure>
+    <img
+      src="${video.thumbnail}" />
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">${video.title}</h2>
+    <p class="mb-3">Aouthor name: ${video.authors[0].profile_name}</p>
+    <p class="text-xl">Description:</p>
+    <p>${video.description}</p>
+  </div>
+</div>
+  `;
+};
 function displayCategories(categories) {
   //   steps to show it pefectly on screen.
   // 1. get the container (by id)
@@ -90,6 +153,8 @@ const displayVideos = (videos) => {
         </h2>
       </div>
     `;
+
+    hideLoader();
     return;
   }
 
@@ -101,7 +166,9 @@ const displayVideos = (videos) => {
     videoCard.innerHTML = `
       <div class="card bg-base-100">
         <figure class="relative">
-          <img class="w-full h-[200px] object-cover" src="${video.thumbnail}" alt="Nature" />
+          <img class="w-full h-[200px] object-cover" src="${
+            video.thumbnail
+          }" alt="Nature" />
           <span
             class="absolute bottom-2 right-2 text-white text-sm bg-black p-1 rounded-md"
             >3hrs 56 min ago</span
@@ -119,28 +186,46 @@ const displayVideos = (videos) => {
             </div>
           </div>
           <div class="intro">
-            <h2 class="text-sm font-semibold">Sunrise Reverie</h2>
+            <h2 class="text-sm font-semibold">${video.title}
+</h2>
 
             <p class="text-sm text-gray-400 flex gap-1">
             ${video.authors[0].profile_name}
-              <img
+            ${
+              video.authors[0].verified == true
+                ? `<img
                 class="w-5 h-5"
                 src="https://img.icons8.com/?size=96&id=98A4yZTt9abw&format=png"
                 alt=""
-              />
+              />`
+                : ``
+            }
+              
             </p>
 
             <p class="text-sm text-gray-400">${video.others.views} views</p>
           </div>
         </div>
+
+        <button onclick="loadVideoDetails('${
+          video.video_id
+        }')" class="btn btn-block">Show details</button>
+
       </div>
     `;
 
     // append
     videoContainer.append(videoCard);
+
+    hideLoader();
   });
 };
 
+// search er kaj kortechi.
+document.getElementById("search-input").addEventListener("keyup", (e) => {
+  const input = e.target.value;
+  loadVideo(input);
+});
 loadCategory();
 
 // etake button e onClick er maddome call korbo
